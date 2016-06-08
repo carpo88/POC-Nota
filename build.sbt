@@ -27,8 +27,7 @@ lazy val commonSettings = Seq(
   scalacOptions        := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8","-Xmax-classfile-name","78"),
 //  maintainer in Docker := "Your Name <your@email.address>",
   resolvers += "tkp-artifactory" at "http://artifactory.intra.tkppensioen.nl/artifactory/maven-global-repo",
-  resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/maven-releases/",
-//  resolvers += "Apache Development Snapshot Repository" at "https://repository.apache.org/content/repositories/snapshots/", // for snap-shots
+//  resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/maven-releases/",
   resolvers += "Apache Development Repository" at "https://repository.apache.org/content/repositories/releases/",
     resolvers += Resolver.mavenLocal
 )
@@ -59,15 +58,18 @@ lazy val nota_inlezen = project.in(file("nota-inlezen"))
   .settings(
     name := "nota-inlezen",
     libraryDependencies ++= Seq(
-        "ojdbc" % "ojdbc" % ojdbcVersion
+      "org.apache.flink"            %% "flink-scala"          % flinkVersion           % "provided"
+      , "org.apache.flink"            %% "flink-clients"        % flinkVersion           % "provided"
+      ,    "ojdbc" % "ojdbc" % ojdbcVersion
 //      , "org.scalactic"              %% "scalactic"        % scalaTestVersion
 //      , "org.scalatest"              %% "scalatest"        % scalaTestVersion       % "test"
-//      , "org.slf4j"                  % "slf4j-nop"        % "1.6.4"
+      , "org.slf4j"                  % "slf4j-nop"        % "1.6.4"
 //      , "org.scalikejdbc"           %% "scalikejdbc"      % "2.4.1"
 //?      , "org.apache.flink"           %% "flink-core"             % flinkVersion           % "provided"
       , "org.apache.flink"           %% "flink-scala"            % flinkVersion           % "provided"
       , "org.apache.flink"           %% "flink-clients"          % flinkVersion           % "provided"
-      , "org.apache.flink"           % "flink-batch-connectors"  % flinkVersion    pomOnly()
+      , "org.apache.flink"           % "flink-batch-connectors"  % flinkVersion   // pomOnly()
+      , "org.apache.flink"           % "flink-jdbc"  % flinkVersion    //pomOnly()
     )
   )
   .dependsOn(nota_opslag_api)

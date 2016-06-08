@@ -9,7 +9,8 @@ import org.apache.flink.api.scala.{ExecutionEnvironment, _}
 import org.apache.flink.api.scala.typeutils._
 //import org.joda.time.{DateTime, Interval, LocalDateTime}
 
-import org.apache.flink.api.java.io.
+import org.apache.flink.api.java.io.jdbc.JDBCInputFormat;
+
 
 object Conversie {
   def main(args: Array[String]): Unit = {
@@ -20,7 +21,7 @@ object Conversie {
 
 
 case class NotaRecord( ntaId: Int, notaRunId: Int, psnWerkgeverId: Int )
-case class Nota( ntaId: Int, notaRunId: Int, psnWerkgeverId: Int, notablokken: Map[NotaBlok] )
+case class Nota( ntaId: Int, notaRunId: Int, psnWerkgeverId: Int, notablokken: Seq[NotaBlok] )
 
 case class NotaBlok( notablokId: Int, ntaId: Int, BlokOmschrijving: String, blokvolgorde: Int)
 
@@ -30,16 +31,16 @@ object Download {
 
     val flinkEnv = ExecutionEnvironment.getExecutionEnvironment
 
-//    val q = flinkEnv.createInput(
-//      JDBCInputFormat.buildJDBCInputFormat()//
-//        .setDrivername(getDatabaseDriverName())//
-//        .setDBUrl(getDatabaseUrl())//
-//        .setUsername(getDatabaseUsername())//
-//        .setPassword(getDatabasePassword())//
-//        .setQuery(getQuery())//
-//        .finish()
-//      , NotaRecord.typeInformation
-//    )
+    val q = flinkEnv.createInput(
+      JDBCInputFormat.buildJDBCInputFormat()
+        .setDrivername("oracle.jdbc.OracleDriver")
+        .setDBUrl("jdbc:oracle:thin:@devdbs01:1521:PPSDEV")
+        .setUsername("KOOIP")
+        .setPassword("ikke1234")
+        .setQuery("select id nta_id, nrn_id, psn_werkgever_id from pas_notas")
+        .finish()
+      , NotaRecord.typeInformation
+    )
 
     println("Start download ")
 
