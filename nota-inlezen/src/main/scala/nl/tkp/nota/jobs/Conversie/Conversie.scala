@@ -5,7 +5,9 @@ package nl.tkp.nota.jobs.Conversie
 
 import org.apache.flink._
 import org.apache.flink.api.common.functions.{FilterFunction, FlatMapFunction, RichMapFunction}
-import org.apache.flink.api.common.typeinfo.BasicTypeInfo
+import org.apache.flink.api.common.typeinfo.{BasicTypeInfo, TypeInformation}
+import org.apache.flink.api.common.typeutils.TypeSerializerFactory
+import org.apache.flink.api.java.io.jdbc.split.GenericParameterValuesProvider
 import org.apache.flink.api.java.tuple.Tuple
 import org.apache.flink.api.java.typeutils.TupleTypeInfo
 import org.apache.flink.api.scala.{ExecutionEnvironment, _}
@@ -16,7 +18,14 @@ import org.apache.flink.api.scala._
 import org.apache.flink.api.java.io.jdbc.JDBCInputFormat
 import org.apache.flink.api.java.io.jdbc.JDBCInputFormat.JDBCInputFormatBuilder
 import org.apache.flink.api.java.typeutils.TupleTypeInfo
+import org.apache.flink.api.table.typeutils.RowTypeInfo
 
+import org.apache.flink.api.table.Row
+
+import scala.util.control._
+
+
+import java.sql.ResultSet
 
 object Conversie {
   def main(args: Array[String]): Unit = {
@@ -31,25 +40,78 @@ case class Nota( ntaId: Int, notaRunId: Int, psnWerkgeverId: Int, notablokken: S
 
 case class NotaBlok( notablokId: Int, ntaId: Int, BlokOmschrijving: String, blokvolgorde: Int)
 
+
 object Download {
   def main(args: Array[String]) {
 
     val flinkEnv = ExecutionEnvironment.getExecutionEnvironment
+//    val flinkEnv =  ExecutionEnvironment.createLocalEnvironment(parallelism = 1)
 
-    val jdbcInputFormat = JDBCInputFormat.buildJDBCInputFormat()
-                            .setDrivername("oracle.jdbc.OracleDriver")
-                            .setDBUrl("jdbc:oracle:thin:@devdbs01:1521:PPSDEV")
-                            .setUsername("KOOIP")
-                            .setPassword("ikke1234")
+    flinkEnv.setParallelism(1)
 
-                            .setQuery("select id nta_id from pas_notas")  //, nrn_id, psn_werkgever_id
-      .finish()
-
-    val dbData   = flinkEnv.createInput( jdbcInputFormat )
+    //flinkEnv.getConfig.disableForceKryo
+    //flinkEnv.getConfig.enableForceAvro
+    flinkEnv.getConfig.enableObjectReuse
+    flinkEnv.getConfig.enableForceKryo
 
 
-    println("jdbc="+ dbData)
+   nl.tkp.nota.jobs.JDBCTestBase.prepareTestDb()
 
+
+    val testInputFormat = JDBCInputFormat.buildJDBCInputFormat()
+      .setDrivername(nl.tkp.nota.jobs.JDBCTestBase.DRIVER_CLASS)
+      .setDBUrl(nl.tkp.nota.jobs.JDBCTestBase.DB_URL)
+      .setQuery(nl.tkp.nota.jobs.JDBCTestBase.SELECT_ALL_BOOKS)
+      .setRowTypeInfo(nl.tkp.nota.jobs.JDBCTestBase.rowTypeInfo)
+      .setResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)
+      .finish
+
+//    val m0 = testInputFormat.createInputSplits(1).length
+
+    testInputFormat.openInputFormat()
+    testInputFormat.open(null)
+
+    val testRow = new org.apache.flink.api.table.Row(5)
+
+    val loop = new Breaks
+    loop.breakable{
+      while( ! testInputFormat.reachedEnd())
+      {
+        val testNext = testInputFormat.nextRecord(testRow)
+        if (testNext == null) loop.break
+
+        println("testNext ="+ testNext)
+      }
+
+    }
+
+    testInputFormat.close()
+    testInputFormat.closeInputFormat()
+
+    val myData = flinkEnv.createInput(testInputFormat)
+
+    myData.collect.foreach( r => println( "Row="+r ))
+
+//
+//    val notaRowTypeInfo = new RowTypeInfo( Seq( org.apache.flink.api.common.typeinfo.BasicTypeInfo.STRING_TYPE_INFO), Seq("id") )
+//
+//    val notaRowSerlia = notaRowTypeInfo.createSerializer(flinkEnv.getConfig)
+//    println("Serialize ="+ notaRowSerlia)
+//
+//    val jdbcInputFormat = nl.tkp.nota.jobs.MyJDBCInputFormat.buildJDBCInputFormat()
+//                            .setDrivername("oracle.jdbc.OracleDriver")
+//                            .setDBUrl("jdbc:oracle:thin:@devdbs01:1521:PPSDEV")
+//                            .setUsername("KOOIP")
+//                            .setPassword("ikke1234")
+//                            .setRowTypeInfo(notaRowTypeInfo)
+//                            .setQuery("select to_char(id) id from pas_notas")  //, nrn_id, psn_werkgever_id
+//                            .finish()
+//
+//    val dbData   = flinkEnv.createInput( jdbcInputFormat )
+//
+//
+//    println("jdbc="+ dbData.collect())
+//
     println("Start download ")
 
     /* Scalajdbc part --- not used */

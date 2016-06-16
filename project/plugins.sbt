@@ -1,9 +1,11 @@
-logLevel := Level.Info
 
-resolvers ++= Seq(
-  Resolver.mavenLocal
-  ,Resolver.typesafeRepo("releases")
-)
+
+logLevel := sbt.Level.Info
+
+//resolvers ++= Seq(
+//  Resolver.mavenLocal
+//  ,Resolver.typesafeRepo("releases")
+//)
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.0-RC1")
 
