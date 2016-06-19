@@ -1,6 +1,5 @@
 
-//lazy val flinkVersion           = "1.0.3"
-lazy val flinkVersion           = "1.1-SNAPSHOT"
+lazy val flinkVersion           = "1.0.3"
 lazy val configVersion          = "1.3.0"
 lazy val jeromqVersion          = "0.3.5"
 lazy val chillVersion           = "0.7.4" // 074 voor compatibility met flink , anders "0.8.0"
@@ -19,7 +18,7 @@ lazy val ojdbcVersion           = "7"
 
 
 
-enablePlugins(GitVersioning, GitBranchPrompt)
+//enablePlugins(GitVersioning, GitBranchPrompt)
 
 lazy val commonSettings = Seq(
   organization         := "nl.tkp.poc",
@@ -27,10 +26,10 @@ lazy val commonSettings = Seq(
   scalaVersion         := "2.10.4",
   scalacOptions        := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8","-Xmax-classfile-name","78"),
 //  maintainer in Docker := "Your Name <your@email.address>",
+  resolvers += "Apache Snapshot    Repository" at "https://repository.apache.org/content/repositories/snapshots/",
   resolvers += "tkp-artifactory" at "http://artifactory.intra.tkppensioen.nl/artifactory/maven-global-repo",
 //  resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/maven-releases/",
   resolvers += "Apache Development Repository" at "https://repository.apache.org/content/repositories/releases/",
-  resolvers += "Apache Snapshot    Repository" at "https://repository.apache.org/content/repositories/snapshots/",
     resolvers += Resolver.mavenLocal
 )
 
@@ -70,9 +69,9 @@ lazy val nota_inlezen = project.in(file("nota-inlezen"))
 //      , "org.apache.flink"           %% "flink-core"             % flinkVersion        // % "provided"
       , "org.apache.flink"           %% "flink-scala"            % flinkVersion        // % "provided"
 //      , "org.apache.flink"           %% "flink-clients"          % flinkVersion        // % "provided"
-      , "org.apache.flink"           % "flink-batch-connectors"  % flinkVersion   // pomOnly()
+      , "org.apache.flink"           % "flink-batch-connectors"  % "1.1-SNAPSHOT"   // pomOnly()
       , "org.apache.flink"           % "flink-jdbc"  % flinkVersion    //pomOnly()
-      , "org.apache.flink"           % "flink-table"  % flinkVersion    //pomOnly()
+      , "org.apache.flink"           % "flink-table"  % flinkVersion    pomOnly()
     )
   )
   .dependsOn(nota_opslag_api)
