@@ -7,7 +7,7 @@ import org.apache.flink._
 import org.apache.flink.api.common.functions.{FilterFunction, FlatMapFunction, RichMapFunction}
 import org.apache.flink.api.common.typeinfo.{BasicTypeInfo, TypeInformation}
 import org.apache.flink.api.common.typeutils.TypeSerializerFactory
-import org.apache.flink.api.java.io.jdbc.split.GenericParameterValuesProvider
+//import org.apache.flink.api.java.io.jdbc.split.GenericParameterValuesProvider
 import org.apache.flink.api.java.tuple.Tuple
 import org.apache.flink.api.java.typeutils.TupleTypeInfo
 import org.apache.flink.api.scala.{ExecutionEnvironment, _}
@@ -34,6 +34,8 @@ object Download {
     val flinkEnv = ExecutionEnvironment.getExecutionEnvironment
 
     flinkEnv.setParallelism(1)
+
+    flinkEnv.getConfig.set
 
    nl.tkp.nota.jobs.JDBCTestBase.prepareTestDb()
 
