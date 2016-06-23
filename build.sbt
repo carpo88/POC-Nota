@@ -26,13 +26,15 @@ lazy val commonSettings = Seq(
   scalaVersion         := "2.10.4",
   scalacOptions        := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8","-Xmax-classfile-name","78"),
   maintainer in Docker := "Your Name <your@email.address>",
- resolvers += "Apache Snapshot    Repository" at "https://repository.apache.org/content/repositories/snapshots/"
-//,resolvers += "Apache Development Repository" at "https://repository.apache.org/content/repositories/releases/"
-,resolvers += "conjars-repo" at "http://conjars.org/repo"
+  resolvers += Resolver.mavenLocal
+, resolvers += "Apache Snapshot    Repository" at "https://repository.apache.org/content/repositories/snapshots/"
+,resolvers += "Apache Development Repository" at "https://repository.apache.org/content/repositories/releases/"
+  ,resolvers += "conjars-repo" at "http://conjars.org/repo"
+  ,resolvers += "mvn-repo" at "https://mvnrepository.com/artifact/"
+//  , https://mvnrepository.com/artifact/org.apache.derby/derby
 //  resolvers += "tkp-apache-public" at "http://artifactory.shs.tkp/artifactory/apache-public",
 //  resolvers += "tkp-global-repo" at "http://artifactory.shs.tkp/artifactory/maven-global-repo",
 //
-,resolvers += Resolver.mavenLocal
 )
 
 
@@ -49,7 +51,7 @@ lazy val jdbc_read = project.in(file("jdbc_read"))
       //      , "ojdbc" % "ojdbc" % ojdbcVersion
       , "org.apache.flink"           %% "flink-table"  % flinkVersion    //pomOnly()
       , "org.apache.flink"           % "flink-jdbc"  % flinkVersion    //pomOnly()
-      , "org.apache.derby" % "derby" % "10.10.1.0"
+      , "org.apache.derby" % "derby" % "10.10.1.1"
 //     , "org.slf4j"                   % "slf4j-nop"             % "1.6.4"
 //     , "com.github.nscala-time"      %% "nscala-time"          % nscalaTimeVersion
 //     , "com.twitter"                 %% "chill"                % chillVersion            exclude("com.esotericsoftware","kryo-shaded")
