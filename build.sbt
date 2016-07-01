@@ -15,6 +15,7 @@ lazy val avroVersion            = "1.8.0"
 lazy val json4sVersion          = "3.3.0"
 lazy val scalikejdbcVersion     = "2.4.1"
 lazy val ojdbcVersion           = "7"
+lazy val jodaVersion            = "2.9.3"
 
 
 
@@ -45,13 +46,14 @@ lazy val jdbc_read = project.in(file("jdbc_read"))
     libraryDependencies ++= Seq(
       "com.typesafe.scala-logging" % "scala-logging-slf4j_2.10" % "2.1.2"
       ,"org.apache.flink"            %% "flink-scala"             % flinkVersion
-      , "org.apache.flink"          %% "flink-clients"           % flinkVersion
-      , "org.apache.flink"          % "flink-libraries"           % flinkVersion
+      , "org.apache.flink"           %% "flink-clients"           % flinkVersion
+      , "org.apache.flink"           % "flink-libraries"           % flinkVersion
       , "org.apache.flink"           % "flink-batch-connectors"  % flinkVersion
-      //      , "ojdbc" % "ojdbc" % ojdbcVersion
+      , "ojdbc" % "ojdbc" % ojdbcVersion
       , "org.apache.flink"           %% "flink-table"  % flinkVersion    //pomOnly()
       , "org.apache.flink"           % "flink-jdbc"  % flinkVersion    //pomOnly()
-      , "org.apache.derby" % "derby" % "10.10.1.1"
+      , "org.apache.derby"           % "derby" % "10.10.1.1"
+      , "joda-time"                  % "joda-time" % jodaVersion
 //     , "org.slf4j"                   % "slf4j-nop"             % "1.6.4"
 //     , "com.github.nscala-time"      %% "nscala-time"          % nscalaTimeVersion
 //     , "com.twitter"                 %% "chill"                % chillVersion            exclude("com.esotericsoftware","kryo-shaded")
