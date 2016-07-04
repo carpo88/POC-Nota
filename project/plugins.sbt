@@ -1,4 +1,6 @@
 
+resolvers += "tkp-global-repo" at "http://artifactory.shs.tkp/artifactory/maven-global-repo"
+
 libraryDependencies += "org.hsqldb" % "hsqldb" % "2.3.2"
 libraryDependencies += "ojdbc" % "ojdbc" % "7"
 

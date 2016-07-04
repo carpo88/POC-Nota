@@ -18,6 +18,7 @@ lazy val ojdbcVersion           = "7"
 lazy val jodaVersion            = "2.9.3"
 
 
+scalikejdbcSettings
 
 //enablePlugins(GitVersioning, GitBranchPrompt)
 
@@ -28,13 +29,13 @@ lazy val commonSettings = Seq(
   scalacOptions        := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8","-Xmax-classfile-name","78"),
   maintainer in Docker := "Your Name <your@email.address>",
   resolvers += Resolver.mavenLocal
-, resolvers += "Apache Snapshot    Repository" at "https://repository.apache.org/content/repositories/snapshots/"
-,resolvers += "Apache Development Repository" at "https://repository.apache.org/content/repositories/releases/"
+  ,resolvers += "tkp-global-repo" at "http://artifactory.shs.tkp/artifactory/maven-global-repo"
+  ,resolvers += "Apache Snapshot    Repository" at "https://repository.apache.org/content/repositories/snapshots/"
+  ,resolvers += "Apache Development Repository" at "https://repository.apache.org/content/repositories/releases/"
   ,resolvers += "conjars-repo" at "http://conjars.org/repo"
   ,resolvers += "mvn-repo" at "https://mvnrepository.com/artifact/"
 //  , https://mvnrepository.com/artifact/org.apache.derby/derby
-//  resolvers += "tkp-apache-public" at "http://artifactory.shs.tkp/artifactory/apache-public",
-//  resolvers += "tkp-global-repo" at "http://artifactory.shs.tkp/artifactory/maven-global-repo",
+  ,resolvers += "tkp-apache-public" at "http://artifactory.shs.tkp/artifactory/apache-public"
 //
 )
 
@@ -45,21 +46,12 @@ lazy val jdbc_read = project.in(file("jdbc_read"))
     name := "nota-opslag-api",
     libraryDependencies ++= Seq(
       "com.typesafe.scala-logging" % "scala-logging-slf4j_2.10" % "2.1.2"
-      ,"org.apache.flink"            %% "flink-scala"             % flinkVersion
-      , "org.apache.flink"           %% "flink-clients"           % flinkVersion
-      , "org.apache.flink"           % "flink-libraries"           % flinkVersion
-      , "org.apache.flink"           % "flink-batch-connectors"  % flinkVersion
       , "ojdbc" % "ojdbc" % ojdbcVersion
-      , "org.apache.flink"           %% "flink-table"  % flinkVersion    //pomOnly()
-      , "org.apache.flink"           % "flink-jdbc"  % flinkVersion    //pomOnly()
       , "org.apache.derby"           % "derby" % "10.10.1.1"
       , "joda-time"                  % "joda-time" % jodaVersion
-//     , "org.slf4j"                   % "slf4j-nop"             % "1.6.4"
-//     , "com.github.nscala-time"      %% "nscala-time"          % nscalaTimeVersion
-//     , "com.twitter"                 %% "chill"                % chillVersion            exclude("com.esotericsoftware","kryo-shaded")
-//     , "com.twitter"                 %% "chill-bijection"      % chillVersion            exclude("com.esotericsoftware","kryo-shaded")
-//     , "de.javakaffee"               %  "kryo-serializers"     % kryoSerializersVersion  exclude("com.esotericsoftware","kryo-shaded")
-//                                                                                         exclude("com.esotericsoftware","kryo")
+  , "org.scalikejdbc" %% "scalikejdbc"         % "2.4.1"
+  ,"org.scalikejdbc" %% "scalikejdbc-config"  % "2.4.1"
+
 //                                                                                         exclude("org.ow2.asm","asm")
 //     , "org.json4s"                  %% "json4s-ext"           % json4sVersion
 //     , "org.json4s"                  %  "json4s-jackson_2.11"  % "3.3.0"
